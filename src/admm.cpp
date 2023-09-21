@@ -909,6 +909,8 @@ FType admm_cf_base(
       niter = it;
     }
 
+    free(norms);
+    free(colnorms);
   } /* omp parallel */
   fprintf(stderr, "ADMM C&F (nnzr: %llu, rho: %f): num of iteration: %llu\n", mat->I, rho, niter);
 

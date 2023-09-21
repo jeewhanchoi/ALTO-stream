@@ -201,7 +201,7 @@ double cpd_fit_alto(AltoTensor<LIT>* AT, KruskalModel* M, Matrix** grams, FType*
 
   FType* accum = (FType*) AlignedMalloc(sizeof(FType) * rank);
   assert(accum);
-  memset(accum, 0, sizeof(FType*) * rank);
+  memset(accum, 0, sizeof(FType) * rank);
 
   // Computing the inner product for M->U and U_mttkrp
   #pragma omp parallel for reduction(+: accum[:rank]) schedule(static)

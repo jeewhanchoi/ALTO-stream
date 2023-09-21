@@ -604,6 +604,13 @@ void RunAltoCheck(SparseTensor* X, IType rank, IType seed,
     }
     // ---------------------------------------------------------------- //
     // Cleanup
+	for(int m = 0; m < X->nmodes; m++) {
+		AlignedFree(truth[m]);
+		AlignedFree(factors[m]);
+	}
+	AlignedFree(truth);
+	AlignedFree(factors);
+
 	destroy_da_mem(AT, ofibs, rank, target_mode);
     DestroySparseTensor(X);
     destroy_alto(AT);
