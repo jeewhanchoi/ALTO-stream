@@ -380,10 +380,9 @@ void ExportMatrix(char * file_path, Matrix * M)
 {
     char str[1000];
     sprintf(str, "%s.out", file_path);
-    // FILE *fp = fopen(str, "w");
 
-    if (!fopen(str, "r")) {
-        FILE *fp = fopen(str, "w");
+    FILE *fp = fopen(str, "w");
+    if (fp != NULL) {
         assert(fp);
         fprintf(fp, "matrix\n");
         fprintf(fp, "2\n");
@@ -399,6 +398,6 @@ void ExportMatrix(char * file_path, Matrix * M)
             fprintf(fp, "\n");
         }
         fprintf(fp, "\n");
-        fclose(fp);
     }
+    fclose(fp);
 }

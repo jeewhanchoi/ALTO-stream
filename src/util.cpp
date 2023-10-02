@@ -16,6 +16,15 @@ Permutation * perm_alloc(
     return perm;
 }
 
+void perm_free(Permutation * perm, int const nmodes) {
+  for (int m = 0; m < MAX_NUM_MODES; ++m) {
+    if (m < nmodes) {
+      free(perm->perms[m]);
+      free(perm->iperms[m]);
+    }
+  }
+}
+
 FType rand_val()
 {
   FType v =  3.0 * ((FType) rand() / (FType) RAND_MAX);

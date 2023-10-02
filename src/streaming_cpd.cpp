@@ -100,9 +100,7 @@ void cpstream(
         //BEGIN_TIMER(&ts);
         wtime = omp_get_wtime();
 #endif
-        // SparseTensor * t_batch = sst.next_batch();
         SparseTensor * t_batch = sst.next_dynamic_batch(nnz_threshold, timeslice_limit);
-        Matrix * local_time = zero_mat(t_batch->dims[streaming_mode], rank);
 
 #if DEBUG == 0
         PrintTensorInfo(rank, max_iters, t_batch);
@@ -113,8 +111,9 @@ void cpstream(
             KruskalModelRandomInit(M, (unsigned int)seed);
             KruskalModelZeroInit(prev_M);
 
-            // Override values for M->U[stream_mode] with last row of local_time matrix
-            M->U[streaming_mode] = local_time->vals;
+            // Set factor matrix for streaming mode as 0
+            memset(M->U[streaming_mode], 0,
+              sizeof(FType) * t_batch->dims[streaming_mode] * rank);
 
             init_grams(&grams, M);
 
@@ -360,6 +359,8 @@ void cpstream(
     if (use_spcpstream) {
         DeleteSparseCPGrams(scpgrams, nmodes);
     }
+    free(ws);
+
     delete global_time;
     return;
 }
@@ -1046,6 +1047,10 @@ void spcpstream_alto_iter(SparseTensor* X, AltoTensor<LIT>* at, KruskalModel* M,
     free_mat(Q[m]);
   }
   free(nz_factors);
+  free(Q_Phi_inv);
+  free(A_nz);
+  free(A_nz_prev);
+  free(Q);
 
   free_mat(Phi);
   free_mat(old_gram);
@@ -1525,22 +1530,4 @@ double compute_errorsq(
     DestroySparseTensor(prev_tensor);
     DestroyKruskalModel(cpd);
     return err * err;
-}
-
-double compute_cpd_errorsq(
-    StreamingSparseTensor * sst,
-    IType rank,
-    IType previous)
-{
-
-    SparseTensor * X = sst->stream_prev(previous);
-    KruskalModel * M;
-    CreateKruskalModel(X->nmodes, X->dims, rank, &M);
-    KruskalModelRandomInit(M, 45);
-
-    double fit = 0.0;
-
-    // double fit = cpd(X, M, 100, 1e-3);
-
-    return fit * fit;
 }

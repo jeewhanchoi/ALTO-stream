@@ -91,6 +91,7 @@ void idxsort_hist(
     }
   }
  }
+ free(counts);
 }
 
 RowSparseMatrix * rowsparse_mttkrp(

@@ -28,6 +28,7 @@ void ExportSparseTensor(
 
   IType nmodes = X->nmodes;
   IType nnz = X->nnz;
+  assert(nnz > 0);
   char fn[1024];
   FILE* fp = NULL;
 
@@ -215,6 +216,7 @@ void ImportSparseTensor(
     // read the nnz
     nnz = 0;
     fread(&nnz, sizeof(IType), 1, fp);
+    assert(nnz > 0); // ensure nnz is in permissible range
     // use this information to read the index and the values
     IType** cidx = (IType**) AlignedMalloc(sizeof(IType*) * nmodes);
     assert(cidx);

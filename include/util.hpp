@@ -17,6 +17,8 @@ typedef struct permutation_struct Permutation;
 Permutation * perm_alloc(
     IType const * const dims, int const nmodes);
 
+void perm_free(Permutation * perm, int const nmodes);
+
 FType rand_val();
 void fill_rand(FType * vals, IType num_el, unsigned int seed);
 

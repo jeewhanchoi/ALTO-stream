@@ -207,6 +207,7 @@ FType admm(
       break;
     }
   }
+  free_mat(Phi);
   //fprintf(stderr, "ADMM (nnzr: %llu, rho: %f): num of iteration: %llu\n", mat->I, rho, it);
   return it;
 }
@@ -634,6 +635,7 @@ FType admm_cf_var_cs(
     }
 
   } /* omp parallel */
+  free_mat(Phi);
   fprintf(stderr, "ADMM C&F (nnzr: %llu, rho: %f): num of iteration: %llu\n", mat->I, rho, niter);
 
   return (FType) niter / mat->I; // this doesn't work
@@ -912,6 +914,7 @@ FType admm_cf_base(
     free(norms);
     free(colnorms);
   } /* omp parallel */
+  free_mat(Phi);
   fprintf(stderr, "ADMM C&F (nnzr: %llu, rho: %f): num of iteration: %llu\n", mat->I, rho, niter);
 
   return niter;
@@ -1104,7 +1107,10 @@ IType admm_func(
     		}
 	}
 	fprintf(stderr, "ADMM (nnzr: %llu, rho: %f): num of iteration: %llu\n", A->I, rho, it);
-	return it;
+	// Free allocated matrix within function
+  free_mat(auxil);
+  free_mat(init);
+  return it;
 };
 
 /*
@@ -1350,6 +1356,8 @@ FType admm_opt(
     return 0.0;
   }
 
+  free_mat(_Phi);
+
   // ADMM realm -- set up blocks
   Matrix * Psi = mttkrp_buf;
   Matrix * U = dual_mat;
@@ -1389,6 +1397,6 @@ FType admm_opt(
 		total_iters += it * nrows;
 	};
 
-  free_mat(_Phi);
+
   return (FType) total_iters/(FType)mat->I;
 };

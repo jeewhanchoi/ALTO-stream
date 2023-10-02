@@ -518,8 +518,14 @@ void BenchmarkAlto(SparseTensor* X, int max_iters, IType rank,
 #endif
 	// ---------------------------------------------------------------- //
 	// Cleanup
+	for(int m = 0; m < X->nmodes; m++) {
+		AlignedFree(factors[m]);
+	}
+	AlignedFree(factors);
+
 	destroy_da_mem(AT, ofibs, rank, target_mode);
 	destroy_alto(AT);
+
 	// ---------------------------------------------------------------- //
 }
 
@@ -613,6 +619,7 @@ void RunAltoCheck(SparseTensor* X, IType rank, IType seed,
 
 	destroy_da_mem(AT, ofibs, rank, target_mode);
     DestroySparseTensor(X);
+	DestroyKruskalModel(M);
     destroy_alto(AT);
     // ---------------------------------------------------------------- //
 }

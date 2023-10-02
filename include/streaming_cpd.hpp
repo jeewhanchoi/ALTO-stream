@@ -92,9 +92,4 @@ double compute_errorsq(
     KruskalModel * M,
     IType previous);
 
-double compute_cpd_errorsq(
-    StreamingSparseTensor * sst,
-    IType rank,
-    IType previous);
-
 #endif // STREAMING_CPD_HPP_

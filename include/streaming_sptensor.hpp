@@ -13,7 +13,9 @@ class StreamingSparseTensor {
             SparseTensor * sp,
             IType stream_mode
         );
-        ~StreamingSparseTensor() {};
+        ~StreamingSparseTensor() {
+            perm_free(_perm, _tensor->nmodes);
+        };
 
         SparseTensor * next_batch();
         SparseTensor * next_dynamic_batch(IType nnz_threshold, IType timeslice_limit);
